@@ -40,7 +40,9 @@ RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_
           /build/install/usr/libexec/sshd-session
 
 # Verify static linking
-RUN file /build/install/usr/sbin/sshd | tee /dev/stderr | grep -q "static" && \
+RUN echo "Binary type:" && \
+    file /build/install/usr/sbin/sshd && \
+    file /build/install/usr/sbin/sshd | grep -q "static" && \
     echo "✓ sshd is statically linked"
 
 # Final image
