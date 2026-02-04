@@ -28,8 +28,8 @@ RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_
         --without-kerberos5 \
         --without-libedit \
         LDFLAGS="-static" \
-        LIBS="-lpthread" && \
-    make -j$(nproc) && \
+        LIBS="-lcrypto -lz -lpthread" && \
+    make -j$(nproc) LDFLAGS="-static" && \
     make install DESTDIR=/build/install && \
     strip /build/install/usr/sbin/sshd \
           /build/install/usr/bin/ssh \
@@ -40,8 +40,9 @@ RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_
           /build/install/usr/libexec/sshd-session
 
 # Verify static linking
-RUN file /build/install/usr/sbin/sshd | grep -q "statically linked" && \
-    echo "sshd is statically linked"
+RUN file /build/install/usr/sbin/sshd && \
+    ldd /build/install/usr/sbin/sshd 2>&1 | grep -q "not a dynamic executable" && \
+    echo "✓ sshd is statically linked"
 
 # Final image
 FROM alpine:latest
