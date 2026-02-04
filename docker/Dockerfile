@@ -40,8 +40,7 @@ RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_
           /build/install/usr/libexec/sshd-session
 
 # Verify static linking
-RUN file /build/install/usr/sbin/sshd && \
-    ldd /build/install/usr/sbin/sshd 2>&1 | grep -q "not a dynamic executable" && \
+RUN file /build/install/usr/sbin/sshd | tee /dev/stderr | grep -q "static" && \
     echo "✓ sshd is statically linked"
 
 # Final image
