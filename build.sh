@@ -23,7 +23,7 @@ for file in scripts/install-openssh.sh docker/Dockerfile; do
 done
 
 echo "Building Docker image..."
-docker build -f docker/Dockerfile -t "${IMAGE_NAME}:${IMAGE_TAG}" .
+docker build --progress=plain -f docker/Dockerfile -t "${IMAGE_NAME}:${IMAGE_TAG}" .
 
 echo
 echo "=========================================="
